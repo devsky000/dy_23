@@ -648,10 +648,27 @@ export default function App() {
           })}
         </div>
       </div>
+      {/* Start Screen Overlay */}
+      {!hasStarted && (
+        <div className="start-overlay">
+          <div className="start-title">🎂 A Special Gift For You 🎂</div>
+          <button className="action-button" onClick={handleStart}>
+            ✨ Tap to Start ✨
+          </button>
+        </div>
+      )}
 
-      {/* Candle Hint */}
+      {/* Blow Candle Button */}
       {hasAnimationCompleted && isCandleLit && (
-        <div className="hint-overlay">press space to blow out the candle</div>
+        <div className="blow-candle-container">
+          <span className="blow-candle-hint">make a wish and...</span>
+          <button
+            className="action-button blow-button"
+            onClick={() => setIsCandleLit(false)}
+          >
+            🕯️ Blow the Candle 🕯️
+          </button>
+        </div>
       )}
 
       {/* 3D Canvas */}
