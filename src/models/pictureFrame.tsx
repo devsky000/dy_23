@@ -29,9 +29,7 @@ export function PictureFrame({
 }: PictureFrameProps) {
   const { gl } = useThree();
   const gltf = useLoader(GLTFLoader, resolvePath("/picture_frame.glb"));
-  // Ensure image path is resolved if it's a relative asset path
-  const resolvedImage = image.startsWith('/') ? resolvePath(image) : image;
-  const pictureTexture = useTexture(resolvedImage);
+  const pictureTexture = useTexture(image);
 
   pictureTexture.colorSpace = SRGBColorSpace;
   const maxAnisotropy =
