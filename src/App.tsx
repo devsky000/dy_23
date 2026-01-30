@@ -25,6 +25,7 @@ import { Table } from "./models/table";
 import "./App.css";
 import { Flowers, Flowers2 } from "./models/flowers";
 import { Teddy } from "./models/teddy";
+import { resolvePath } from "./utils/file";
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -129,7 +130,7 @@ type EnvironmentBackgroundControllerProps = {
 const BIRTHDAY_CARDS: ReadonlyArray<BirthdayCardConfig> = [
   {
     id: "confetti",
-    image: "/card.png",
+    image: resolvePath("/card.png"),
     position: [2.3, 0.081, -0.5],
     rotation: [-Math.PI / 2, 0, Math.PI / 2],
   },
@@ -321,25 +322,25 @@ function AnimatedScene({
 
         {/* Picture Frames */}
         <PictureFrame
-          image="/frame2.jpg"
+          image={resolvePath("/frame2.jpg")}
           position={[0, 0.735, 3]}
           rotation={[0, 5.6, 0]}
           scale={0.75}
         />
         <PictureFrame
-          image="/frame3.jpg"
+          image={resolvePath("/frame3.jpg")}
           position={[0, 0.735, -3]}
           rotation={[0, 4.0, 0]}
           scale={0.75}
         />
         <PictureFrame
-          image="/frame4.jpg"
+          image={resolvePath("/frame4.jpg")}
           position={[-1.5, 0.735, 2.5]}
           rotation={[0, 5.4, 0]}
           scale={0.75}
         />
         <PictureFrame
-          image="/frame1.jpg"
+          image={resolvePath("/frame1.jpg")}
           position={[-1.5, 0.735, -2.5]}
           rotation={[0, 4.2, 0]}
           scale={0.75}
@@ -476,7 +477,7 @@ export default function App() {
 
   // Initialize background music
   useEffect(() => {
-    const audio = new Audio("/music.mp3");
+    const audio = new Audio(resolvePath("/music.mp3"));
     audio.loop = true;
     audio.preload = "auto";
     backgroundAudioRef.current = audio;
@@ -682,7 +683,7 @@ export default function App() {
             color={[1, 0.9, 0.9]}
           />
           <Environment
-            files={["/shanghai_bund_4k.hdr"]}
+            files={[resolvePath("/shanghai_bund_4k.hdr")]}
             backgroundRotation={[0, 3.3, 0]}
             environmentRotation={[0, 3.3, 0]}
             background

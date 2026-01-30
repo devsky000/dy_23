@@ -6,8 +6,10 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 type CakeProps = ThreeElements["group"];
 
+import { resolvePath } from "../utils/file";
+
 export function Cake({ children, ...groupProps }: CakeProps) {
-  const gltf = useLoader(GLTFLoader, "/cake.glb");
+  const gltf = useLoader(GLTFLoader, resolvePath("/cake.glb"));
   const cakeScene = useMemo<Group | null>(() => gltf.scene?.clone(true) ?? null, [gltf.scene]);
 
   if (!cakeScene) {
@@ -23,7 +25,7 @@ export function Cake({ children, ...groupProps }: CakeProps) {
 }
 
 export function Cupcake({ children, ...groupProps }: CakeProps) {
-  const gltf = useLoader(GLTFLoader, "/cupcake.glb");
+  const gltf = useLoader(GLTFLoader, resolvePath("/cupcake.glb"));
   const cupcakeScene = useMemo<Group | null>(() => gltf.scene?.clone(true) ?? null, [gltf.scene]);
 
   if (!cupcakeScene) {

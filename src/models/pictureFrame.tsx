@@ -18,6 +18,8 @@ type PictureFrameProps = ThreeElements["group"] & {
 
 const DEFAULT_IMAGE_SCALE: [number, number] = [0.82, 0.82];
 
+import { resolvePath } from "../utils/file";
+
 export function PictureFrame({
   image,
   imageScale = DEFAULT_IMAGE_SCALE,
@@ -26,8 +28,10 @@ export function PictureFrame({
   ...groupProps
 }: PictureFrameProps) {
   const { gl } = useThree();
-  const gltf = useLoader(GLTFLoader, "/picture_frame.glb");
-  const pictureTexture = useTexture(image);
+  const gltf = useLoader(GLTFLoader, resolvePath("/picture_frame.glb"));
+  // Ensure image path is resolved if it's a relative asset path
+  const resolvedImage = image.startsWith('/') ? resolvePath(image) : image;
+  const pictureTexture = useTexture(resolvedImage);
 
   pictureTexture.colorSpace = SRGBColorSpace;
   const maxAnisotropy =

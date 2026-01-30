@@ -6,8 +6,10 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 type TableProps = ThreeElements["group"];
 
+import { resolvePath } from "../utils/file";
+
 export function Table({ children, ...groupProps }: TableProps) {
-  const gltf = useLoader(GLTFLoader, "/table.glb");
+  const gltf = useLoader(GLTFLoader, resolvePath("/table.glb"));
   const tableScene = useMemo<Group | null>(() => gltf.scene?.clone(true) ?? null, [gltf.scene]);
 
   if (!tableScene) {
