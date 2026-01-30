@@ -87,13 +87,13 @@ const BACKGROUND_FADE_START = Math.max(
 // Typing Animation
 
 const TYPED_LINES = [
-  "> hi dydy sayang... (//ω//)",
-  "   ",
-  "> happy birthday, babyy ✨",
-  "   ",
-  "> i crafted this digital birthday cake for u",
-  "   ",
-  "make a wish... (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
+  " > hi dydy sayang... (//ω//)",
+  " ... ",
+  " > happy birthday, babyy ✨",
+  " ... ",
+  " > i crafted this digital birthday cake for u",
+  " ... ",
+  " make a wish... (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
 ];
 const TYPED_CHAR_DELAY = 100;
 const POST_TYPING_SCENE_DELAY = 1000;
