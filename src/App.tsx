@@ -23,6 +23,7 @@ import { PictureFrame } from "./models/pictureFrame";
 import { Table } from "./models/table";
 
 import "./App.css";
+import { Confetti } from "./models/confetti";
 import { Flowers, Flowers2 } from "./models/flowers";
 import { Teddy } from "./models/teddy";
 import { resolvePath } from "./utils/file";
@@ -87,17 +88,17 @@ const BACKGROUND_FADE_START = Math.max(
 // Typing Animation
 
 const TYPED_LINES = [
-  " > hi dydy sayang... (//ω//)",
+  " > hai dydy sayang... (//ω//)",
   " ... ",
-  " > happy birthday, babyy ✨",
+  " > happy birthday, my cutee babyy ✨",
   " ... ",
-  " > i crafted this digital birthday cake for u",
+  " > aku buat kue ala-ala digital buat kamuu ehehehe",
   " ... ",
-  " make a wish... (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
+  " > make a wish... (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
 ];
-const TYPED_CHAR_DELAY = 100;
+const TYPED_CHAR_DELAY = 85;
 const POST_TYPING_SCENE_DELAY = 1000;
-const CURSOR_BLINK_INTERVAL = 480;
+const CURSOR_BLINK_INTERVAL = 450;
 
 // ============================================================================
 // TYPES
@@ -118,6 +119,7 @@ type AnimatedSceneProps = {
   cards: ReadonlyArray<BirthdayCardConfig>;
   activeCardId: string | null;
   onToggleCard: (id: string) => void;
+  onPreviewImage?: (imageSrc: string) => void;
 };
 
 type EnvironmentBackgroundControllerProps = {
@@ -131,8 +133,8 @@ const BIRTHDAY_CARDS: ReadonlyArray<BirthdayCardConfig> = [
   {
     id: "confetti",
     image: resolvePath("/card.png"),
-    position: [2.3, 0.081, -0.5],
-    rotation: [-Math.PI / 2, 0, Math.PI / 2],
+    position: [2.5, 0.15, 0],
+    rotation: [-Math.PI / 2, 0.10, Math.PI / 2],
   },
 ];
 
@@ -152,6 +154,7 @@ function AnimatedScene({
   cards,
   activeCardId,
   onToggleCard,
+  onPreviewImage,
 }: AnimatedSceneProps) {
   // Refs for 3D objects
   const cakeGroup = useRef<Group>(null);
@@ -326,24 +329,28 @@ function AnimatedScene({
           position={[0, 0.735, 3]}
           rotation={[0, 5.6, 0]}
           scale={0.75}
+          onImageClick={onPreviewImage}
         />
         <PictureFrame
           image={resolvePath("/frame3.jpg")}
           position={[0, 0.735, -3]}
           rotation={[0, 4.0, 0]}
           scale={0.75}
+          onImageClick={onPreviewImage}
         />
         <PictureFrame
           image={resolvePath("/frame4.jpg")}
           position={[-1.5, 0.735, 2.5]}
           rotation={[0, 5.4, 0]}
           scale={0.75}
+          onImageClick={onPreviewImage}
         />
         <PictureFrame
           image={resolvePath("/frame1.jpg")}
           position={[-1.5, 0.735, -2.5]}
           rotation={[0, 4.2, 0]}
           scale={0.75}
+          onImageClick={onPreviewImage}
         />
 
         {/* Flower Bouquet */}
@@ -367,7 +374,7 @@ function AnimatedScene({
 
         <Cupcake
           scale={4}
-          position={[1.8, 0.45, -3.5]}
+          position={[1.5, 0.45, -3]}
           rotation={[0, Math.PI / 5, 0]}
         />
 
@@ -470,7 +477,11 @@ export default function App() {
   const [hasAnimationCompleted, setHasAnimationCompleted] = useState(false);
   const [isCandleLit, setIsCandleLit] = useState(true);
   const [fireworksActive, setFireworksActive] = useState(false);
+  const [confettiActive, setConfettiActive] = useState(false);
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
+
+  // Preview Image State
+  const [previewedImage, setPreviewedImage] = useState<string | null>(null);
 
   // Audio
   const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -659,12 +670,15 @@ export default function App() {
       )}
 
       {/* Blow Candle Button */}
-      {hasAnimationCompleted && isCandleLit && (
+      {hasAnimationCompleted && isCandleLit && activeCardId === null && (
         <div className="blow-candle-container">
           <span className="blow-candle-hint">make a wish and...</span>
           <button
             className="action-button blow-button"
-            onClick={() => setIsCandleLit(false)}
+            onClick={() => {
+              setIsCandleLit(false);
+              setConfettiActive(true);
+            }}
           >
             🕯️ Blow the Candle 🕯️
           </button>
@@ -692,6 +706,7 @@ export default function App() {
             cards={BIRTHDAY_CARDS}
             activeCardId={activeCardId}
             onToggleCard={handleCardToggle}
+            onPreviewImage={setPreviewedImage}
           />
           <ambientLight intensity={(1 - environmentProgress) * 0.9} />
           <directionalLight
@@ -711,6 +726,7 @@ export default function App() {
             intensity={0.05 * environmentProgress}
           />
           <Fireworks isActive={fireworksActive} origin={[0, 10, 0]} />
+          <Confetti isActive={confettiActive} origin={[0, 2, 0]} />
           <ConfiguredOrbitControls />
         </Suspense>
       </fiber.Canvas>
@@ -729,6 +745,17 @@ export default function App() {
           </button>
         </div>
       )} */}
+
+      {/* Image Preview Overlay */}
+      {previewedImage && (
+        <div
+          className="image-preview-overlay"
+          onClick={() => setPreviewedImage(null)}
+        >
+          <img src={previewedImage} alt="Preview" className="preview-image" />
+          <span className="preview-close-hint">Tap anywhere to close</span>
+        </div>
+      )}
     </div>
   );
 }

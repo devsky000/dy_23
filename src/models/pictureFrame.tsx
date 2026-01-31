@@ -14,16 +14,24 @@ type PictureFrameProps = ThreeElements["group"] & {
   image: string;
   imageScale?: number | [number, number];
   imageOffset?: [number, number, number];
+  onImageClick?: (imageSrc: string) => void;
 };
 
 const DEFAULT_IMAGE_SCALE: [number, number] = [0.82, 0.82];
 
 import { resolvePath } from "../utils/file";
 
+// ... imports
+import { useFrame } from "@react-three/fiber";
+import { useRef, useState } from "react";
+import { Group, MathUtils } from "three";
+import { useInteraction } from "../hooks/useInteraction";
+
 export function PictureFrame({
   image,
   imageScale = DEFAULT_IMAGE_SCALE,
   imageOffset,
+  onImageClick,
   children,
   ...groupProps
 }: PictureFrameProps) {
@@ -90,18 +98,50 @@ export function PictureFrame({
     };
   }, [pictureMaterial]);
 
+  const innerRef = useRef<Group>(null);
+  const [wiggleStartTime, setWiggleStartTime] = useState<number | null>(null);
+
+  const { hovered, bind } = useInteraction(() => {
+    setWiggleStartTime(Date.now());
+    onImageClick?.(image);
+  });
+
+  useFrame(() => {
+    if (!innerRef.current) return;
+
+    // Hover Tilt (X axis) - looks up at user slightly
+    const targetRotX = hovered ? -0.2 : 0;
+    innerRef.current.rotation.x = MathUtils.lerp(innerRef.current.rotation.x, targetRotX, 0.1);
+
+    // Click Wiggle (Z axis twist)
+    if (wiggleStartTime !== null) {
+      const duration = 400;
+      const progress = (Date.now() - wiggleStartTime) / duration;
+
+      if (progress >= 1) {
+        setWiggleStartTime(null);
+        innerRef.current.rotation.z = 0;
+      } else {
+        // Wiggle back and forth
+        innerRef.current.rotation.z = Math.sin(progress * Math.PI * 4) * 0.1;
+      }
+    }
+  });
+
   return (
-    <group {...groupProps}>
-      <group rotation={[0.04, 0, 0]}>
-        <primitive object={frameScene} />
-        <mesh
-          position={imagePosition}
-          rotation={[0.435, Math.PI, 0]}
-          material={pictureMaterial}
-        >
-          <planeGeometry args={[imageWidth, imageHeight]} />
-        </mesh>
-        {children}
+    <group {...groupProps} {...bind}>
+      <group ref={innerRef}>
+        <group rotation={[0.04, 0, 0]}>
+          <primitive object={frameScene} />
+          <mesh
+            position={imagePosition}
+            rotation={[0.435, Math.PI, 0]}
+            material={pictureMaterial}
+          >
+            <planeGeometry args={[imageWidth, imageHeight]} />
+          </mesh>
+          {children}
+        </group>
       </group>
     </group>
   );
