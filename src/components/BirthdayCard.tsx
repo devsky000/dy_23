@@ -28,7 +28,7 @@ type BirthdayCardProps = {
   children?: ReactNode;
 };
 
-const CARD_SCALE = 0.25;
+const CARD_SCALE = 0.31;  // Increased from 0.25 for better mobile touch
 const CARD_WIDTH = 4 * CARD_SCALE;
 const CARD_HEIGHT = 3 * CARD_SCALE;
 const CAMERA_DISTANCE = 0.65;
@@ -132,7 +132,7 @@ export function BirthdayCard({
     group.scale.lerp(tmpScale, lerpAlpha);
   });
 
-  const handlePointerOver = useCallback(
+  const handlePointerEnter = useCallback(
     (event: ThreeEvent<PointerEvent>) => {
       event.stopPropagation();
       if (!isActive) {
@@ -142,17 +142,13 @@ export function BirthdayCard({
     [isActive]
   );
 
-  const handlePointerOut = useCallback((event: ThreeEvent<PointerEvent>) => {
+  const handlePointerLeave = useCallback((event: ThreeEvent<PointerEvent>) => {
     event.stopPropagation();
     setIsHovered(false);
   }, []);
 
-  const handlePointerDown = useCallback((event: ThreeEvent<PointerEvent>) => {
-    event.stopPropagation();
-  }, []);
-
-  const handleClick = useCallback(
-    (event: ThreeEvent<MouseEvent>) => {
+  const handlePointerDown = useCallback(
+    (event: ThreeEvent<PointerEvent>) => {
       event.stopPropagation();
       onToggle(id);
     },
@@ -163,10 +159,9 @@ export function BirthdayCard({
     <group ref={groupRef}>
       <group rotation={[0, 0, 0]}>
         <mesh
-          onPointerOver={handlePointerOver}
-          onPointerOut={handlePointerOut}
+          onPointerEnter={handlePointerEnter}
+          onPointerLeave={handlePointerLeave}
           onPointerDown={handlePointerDown}
-          onClick={handleClick}
           castShadow
           receiveShadow
         >

@@ -36,6 +36,11 @@ export function Flowers({ children, ...groupProps }: FlowersProps) {
         <group {...groupProps} {...bind}>
             <group ref={innerRef}>
                 <primitive object={scene} />
+                {/* Hitbox: Makes clicking much easier on mobile */}
+                <mesh position={[0, 0.5, 0]} visible={false}>
+                    <cylinderGeometry args={[1.5, 1.5, 2, 8]} />
+                    <meshBasicMaterial />
+                </mesh>
             </group>
             {children}
         </group>
@@ -70,6 +75,11 @@ export function Flowers2({ children, ...groupProps }: FlowersProps) {
         <group {...groupProps} {...bind}>
             <group ref={innerRef}>
                 <primitive object={scene} />
+                {/* Hitbox: Makes clicking much easier on mobile */}
+                <mesh position={[0, 0.02, 0]} visible={false}>
+                    <cylinderGeometry args={[0.08, 0.08, 0.08, 8]} />
+                    <meshBasicMaterial />
+                </mesh>
             </group>
             {children}
         </group>

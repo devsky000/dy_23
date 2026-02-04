@@ -8,17 +8,15 @@ export function useInteraction(onClick?: () => void) {
     useCursor(hovered);
 
     const bind = {
-        onPointerOver: (e: ThreeEvent<PointerEvent>) => {
+        onPointerEnter: (e: ThreeEvent<PointerEvent>) => {
             e.stopPropagation();
             setHover(true);
         },
-        onPointerOut: () => {
-            // e.stopPropagation(); // Usually safe to not propagate out, but let's see. 
-            // If we stop propagation on out, it might prevent parent handlers? 
-            // Actually standard behavior is usually just handle self.
+        onPointerLeave: (e: ThreeEvent<PointerEvent>) => {
+            e.stopPropagation();
             setHover(false);
         },
-        onClick: (e: ThreeEvent<MouseEvent>) => {
+        onPointerDown: (e: ThreeEvent<PointerEvent>) => {
             e.stopPropagation();
             onClick?.();
         }

@@ -56,6 +56,11 @@ export function Cake({ children, ...groupProps }: CakeProps) {
     <group {...groupProps} {...bind}>
       <group ref={innerRef}>
         <primitive object={cakeScene} />
+        {/* Hitbox: Makes clicking much easier on mobile */}
+        <mesh position={[0, 0.15, 0]} visible={false}>
+          <cylinderGeometry args={[0.4, 0.4, 0.5, 12]} />
+          <meshBasicMaterial />
+        </mesh>
       </group>
       {children}
     </group>
@@ -120,6 +125,11 @@ export function Cupcake({ children, ...groupProps }: CakeProps) {
     <group {...groupProps} {...bind}>
       <group ref={innerRef}>
         <primitive object={cupcakeScene} />
+        {/* Hitbox: Makes clicking much easier on mobile */}
+        <mesh position={[0, 0.08, 0]} visible={false}>
+          <cylinderGeometry args={[0.15, 0.15, 0.25, 12]} />
+          <meshBasicMaterial />
+        </mesh>
       </group>
       {children}
     </group>

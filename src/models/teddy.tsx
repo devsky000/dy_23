@@ -59,6 +59,11 @@ export function Teddy({ children, ...groupProps }: TeddyProps) {
         <group {...groupProps} {...bind}>
             <group ref={innerRef}>
                 <primitive object={scene} />
+                {/* Hitbox: Makes clicking much easier */}
+                <mesh position={[0, 0.05, 0]} visible={false}>
+                    <cylinderGeometry args={[0.08, 0.08, 0.15, 8]} />
+                    <meshBasicMaterial />
+                </mesh>
             </group>
             {children}
         </group>

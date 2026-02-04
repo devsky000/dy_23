@@ -66,7 +66,7 @@ canvas {
   max-height: calc(100dvh - 6rem);
   overflow-y: auto;
   padding-right: 0.25rem;
-  pointer-events: auto;
+  pointer-events: none;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
@@ -81,6 +81,8 @@ canvas {
   display: block;
   min-height: 1.25em;
   word-break: break-word;
+  pointer-events: auto;
+  width: fit-content;
 }
 
 .space-hint {
@@ -277,8 +279,8 @@ canvas {
     font-size: clamp(1rem, 5vw, 1.5rem);
     letter-spacing: clamp(0.02em, 0.35vw, 0.06em);
     line-height: 1.5;
-    max-width: 100%;
-    width: 100%;
+    max-width: 85%;
+    width: auto;
     max-height: calc(100dvh - 7rem);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
       "Liberation Mono", "Courier New", monospace;
