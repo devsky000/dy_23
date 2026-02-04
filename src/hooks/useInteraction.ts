@@ -16,7 +16,7 @@ export function useInteraction(onClick?: () => void) {
             e.stopPropagation();
             setHover(false);
         },
-        onPointerDown: (e: ThreeEvent<PointerEvent>) => {
+        onClick: (e: ThreeEvent<MouseEvent>) => {
             e.stopPropagation();
             onClick?.();
         }
