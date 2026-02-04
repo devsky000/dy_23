@@ -8,11 +8,11 @@ export function useInteraction(onClick?: () => void) {
     useCursor(hovered);
 
     const bind = {
-        onPointerEnter: (e: ThreeEvent<PointerEvent>) => {
+        onPointerOver: (e: ThreeEvent<PointerEvent>) => {
             e.stopPropagation();
             setHover(true);
         },
-        onPointerLeave: (e: ThreeEvent<PointerEvent>) => {
+        onPointerOut: (e: ThreeEvent<PointerEvent>) => {
             e.stopPropagation();
             setHover(false);
         },
