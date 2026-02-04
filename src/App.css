@@ -1,0 +1,392 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  display: block;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+.App {
+  width: 100%;
+  height: 100dvh;
+  min-height: 100svh;
+  overflow: hidden;
+  position: relative;
+  background: #0b0212;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+.background-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  transition: opacity 200ms linear;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: clamp(1.5rem, 4vw, 3rem);
+  padding-inline: clamp(1rem, 4vw, 3rem);
+  padding-bottom: clamp(1rem, 3vw, 2rem);
+  color: #ffffff;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.typed-text {
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(1.2rem, 2.6vmin, 2.6rem);
+  font-weight: 600;
+  letter-spacing: clamp(0.04em, 0.25vmin, 0.1em);
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: clamp(0.2rem, 0.8vmin, 0.35rem);
+  max-width: min(92vw, 60rem);
+  line-height: 1.22;
+  max-height: calc(100dvh - 6rem);
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  pointer-events: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.typed-cursor {
+  display: inline-block;
+  width: 0.1em;
+  margin-left: 0.15em;
+}
+
+.typed-line {
+  display: block;
+  min-height: 1.25em;
+  word-break: break-word;
+}
+
+.space-hint {
+  margin-top: 1.5rem;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.hint-overlay {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Courier New", Courier, monospace;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 242, 228, 0.9);
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Start Screen Overlay */
+.start-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 2, 18, 0.95);
+  gap: 2rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.start-title {
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 20px rgba(255, 200, 150, 0.5);
+}
+
+/* Action Buttons */
+.action-button {
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 1rem 2.5rem;
+  border: 2px solid rgba(255, 220, 180, 0.6);
+  background: linear-gradient(135deg, rgba(255, 180, 100, 0.15), rgba(255, 120, 80, 0.1));
+  color: rgba(255, 242, 228, 0.95);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 0 20px rgba(255, 150, 100, 0.2),
+    inset 0 0 20px rgba(255, 200, 150, 0.05);
+  backdrop-filter: blur(10px);
+  min-height: 44px;
+  max-width: 100%;
+  text-align: center;
+  white-space: normal;
+}
+
+.action-button:hover {
+  background: linear-gradient(135deg, rgba(255, 180, 100, 0.3), rgba(255, 120, 80, 0.2));
+  border-color: rgba(255, 220, 180, 0.9);
+  box-shadow:
+    0 0 30px rgba(255, 150, 100, 0.4),
+    inset 0 0 25px rgba(255, 200, 150, 0.1);
+  transform: scale(1.05);
+}
+
+.action-button:active {
+  transform: scale(0.98);
+}
+
+/* Blow Candle Button Container */
+.blow-candle-container {
+  position: absolute;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding-inline: 1rem;
+}
+
+.blow-candle-hint {
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 242, 228, 0.7);
+}
+
+.blow-button {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px rgba(255, 150, 100, 0.3),
+      inset 0 0 20px rgba(255, 200, 150, 0.05);
+  }
+
+  50% {
+    box-shadow:
+      0 0 35px rgba(255, 150, 100, 0.5),
+      inset 0 0 25px rgba(255, 200, 150, 0.1);
+  }
+}
+
+/* Image Preview Overlay */
+.image-preview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  cursor: pointer;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.preview-image {
+  max-width: 90vw;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 10px 50px rgba(255, 180, 100, 0.3);
+  animation: zoomIn 0.3s ease-out;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.preview-close-hint {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 242, 228, 0.6);
+}
+
+@media (max-width: 640px) {
+  .background-overlay {
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    padding-top: clamp(1rem, 6vw, 2rem);
+    padding-inline: clamp(1rem, 6vw, 2rem);
+  }
+
+  .typed-text {
+    align-items: flex-start;
+    gap: 0.15rem;
+    font-size: clamp(2rem, 3.1vw, 1.35rem);
+    letter-spacing: clamp(0.02em, 0.35vw, 0.06em);
+    line-height: 1.14;
+    max-width: 100%;
+    width: 100%;
+    max-height: calc(100dvh - 7rem);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      "Liberation Mono", "Courier New", monospace;
+  }
+
+  .typed-line {
+    min-height: 1.1em;
+  }
+
+  .start-title {
+    letter-spacing: 0.06em;
+  }
+
+  .action-button {
+    letter-spacing: 0.1em;
+    padding: 0.9rem 1.5rem;
+    width: min(90vw, 360px);
+  }
+
+  .blow-candle-hint {
+    letter-spacing: 0.14em;
+  }
+
+  .card-zoom-controls {
+    gap: 0.35rem;
+    padding: 0.45rem 0.6rem;
+  }
+
+  .card-zoom-label {
+    display: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .typed-text {
+    max-width: min(90vw, 70rem);
+  }
+}
+
+@media (max-height: 720px) {
+  .background-overlay {
+    padding-top: 1rem;
+  }
+
+  .typed-text {
+    font-size: clamp(3rem, 2.2vmin, 2.1rem);
+  }
+}
+
+@media (max-height: 640px) {
+  .typed-text {
+    font-size: clamp(0.85rem, 2.1vmin, 1.8rem);
+    line-height: 1.12;
+  }
+}
+
+/* Card Zoom Controls */
+.card-zoom-controls {
+  position: absolute;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(11, 2, 18, 0.65);
+  border: 1px solid rgba(255, 220, 180, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+.card-zoom-label {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 242, 228, 0.75);
+}
+
+.zoom-button,
+.zoom-reset {
+  font-family: "Courier New", Courier, monospace;
+  color: rgba(255, 242, 228, 0.95);
+  background: rgba(255, 180, 100, 0.12);
+  border: 1px solid rgba(255, 220, 180, 0.5);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.zoom-button:hover,
+.zoom-reset:hover {
+  background: rgba(255, 180, 100, 0.25);
+  border-color: rgba(255, 220, 180, 0.8);
+  transform: translateY(-1px);
+}
+
+.zoom-button:active,
+.zoom-reset:active {
+  transform: translateY(0);
+}
+
+.zoom-reset {
+  padding: 0.35rem 0.9rem;
+  min-width: auto;
+}
