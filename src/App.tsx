@@ -747,7 +747,6 @@ export default function App() {
       {/* Blow Candle Button */}
       {hasAnimationCompleted && isCandleLit && activeCardId === null && (
         <div className="blow-candle-container">
-          <span className="blow-candle-hint">make a wish and...</span>
           <button
             className="action-button blow-button"
             onClick={() => {
