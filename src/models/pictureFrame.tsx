@@ -101,7 +101,7 @@ export function PictureFrame({
   const innerRef = useRef<Group>(null);
   const [wiggleStartTime, setWiggleStartTime] = useState<number | null>(null);
 
-  const { hovered, bind } = useInteraction(() => {
+  const { hovered } = useInteraction(() => {
     setWiggleStartTime(Date.now());
     onImageClick?.(image);
   });
@@ -128,8 +128,22 @@ export function PictureFrame({
     }
   });
 
+  const handlePointerDown = (e: any) => {
+    e.stopPropagation();
+    setWiggleStartTime(Date.now());
+    onImageClick?.(image);
+  };
+
+  const handlePointerEnter = (e: any) => {
+    e.stopPropagation();
+  };
+
+  const handlePointerLeave = (e: any) => {
+    e.stopPropagation();
+  };
+
   return (
-    <group {...groupProps} {...bind}>
+    <group {...groupProps}>
       <group ref={innerRef}>
         <group rotation={[0.04, 0, 0]}>
           <primitive object={frameScene} />
@@ -139,6 +153,16 @@ export function PictureFrame({
             material={pictureMaterial}
           >
             <planeGeometry args={[imageWidth, imageHeight]} />
+          </mesh>
+          {/* Large invisible hitbox for reliable mobile touch */}
+          <mesh
+            position={[0, 0.02, 0]}
+            onPointerDown={handlePointerDown}
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
+          >
+            <boxGeometry args={[0.5, 0.6, 0.15]} />
+            <meshBasicMaterial transparent opacity={0} />
           </mesh>
           {children}
         </group>
